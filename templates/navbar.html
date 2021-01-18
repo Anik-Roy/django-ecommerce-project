@@ -1,0 +1,55 @@
+{% load cart_tag %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'App_Shop:home' %}">Django E-commerce Project</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'App_Shop:home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+            <div class="cart-wrap">
+                <a class="nav-link" href="{% url 'App_Order:cart' %}"><i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;Cart</a>
+                <span class="cart-total">
+                    {% if user.is_authenticated %}
+                        {{ request.user|cart_total }}
+                    {% endif %}
+                </span>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+             <i class="fas fa-user-tie"></i>&nbsp;&nbsp;
+              {% if user.is_authenticated %}
+                {% if user.profile.username %}
+                    {{ user.profile.username }}
+                {% else %}
+                    {{ user.email }}
+                {% endif %}
+              {% else %}None{% endif %}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            {% if user.is_authenticated %}
+                <li><a class="dropdown-item" href="{% url 'App_Login:profile' %}">Profile</a></li>
+                <li><a class="dropdown-item" href="{% url 'App_Payment:orders' %}">Orders</a></li>
+            {% endif %}
+            <li><hr class="dropdown-divider"></li>
+            {% if user.is_authenticated %}
+                <li><a class="dropdown-item" href="{% url 'App_Login:logout' %}">Logout</a></li>
+            {% else %}
+                <li><a class="dropdown-item" href="{% url 'App_Login:signup' %}">Signup</a></li>
+                <li><a class="dropdown-item" href="{% url 'App_Login:login' %}">Login</a></li>
+            {% endif %}
+          </ul>
+        </li>
+      </ul>
+{#      <form class="d-flex">#}
+{#        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">#}
+{#        <button class="btn btn-outline-success" type="submit">Search</button>#}
+{#      </form>#}
+    </div>
+  </div>
+</nav>

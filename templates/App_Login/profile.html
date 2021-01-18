@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title_block %} Profile|{{ user.email }} {% endblock %}
+{% block style_block %}
+    <style>
+        .heading-box {
+            text-align: center;
+            border-bottom: 1px solid black;
+            padding: 15px;
+            display: flex;
+            justify-content: space-evenly;
+
+        }
+        .heading-box h3 {
+        }
+    </style>
+{% endblock %}
+{% block body_block %}
+    <div class="heading-box">
+        {% if user.profile.full_name %}
+            <h3>{{ user.profile.full_name }}'s profile</h3>
+        {% else %}
+            <h3>{{ user.email }}'s profile</h3>
+        {% endif %}
+        <a class="btn btn-info" href="{% url 'App_Login:edit-profile' %}">Edit Profile</a>
+    </div>
+    <div class="profile-box p-4">
+        <div class="row m-2 p-3">
+            <div class="col-sm-3">Email:</div>
+            <div class="col-sm-9">{{ user.email }}</div>
+        </div>
+        <div class="row m-2 p-3">
+            <div class="col-sm-3">Username:</div>
+            <div class="col-sm-9">{{ user.profile.username }}</div>
+        </div>
+        <div class="row m-2 p-3">
+            <div class="col-sm-3">Fullname:</div>
+            <div class="col-sm-9">{{ user.profile.full_name }}</div>
+        </div>
+        <div class="row m-2 p-3">
+            <div class="col-sm-3">Address:</div>
+            <div class="col-sm-9">{{ user.profile.address }}</div>
+        </div>
+        <div class="row m-2 p-3">
+            <div class="col-sm-3">City:</div>
+            <div class="col-sm-9">{{ user.profile.city }}</div>
+        </div>
+        <div class="row m-2 p-3">
+            <div class="col-sm-3">Zipcode:</div>
+            <div class="col-sm-9">{{ user.profile.zipcode }}</div>
+        </div>
+        <div class="row m-2 p-3">
+            <div class="col-sm-3">Country:</div>
+            <div class="col-sm-9">{{ user.profile.country }}</div>
+        </div>
+        <div class="row m-2 p-3">
+            <div class="col-sm-3">Phone:</div>
+            <div class="col-sm-9">{{ user.profile.phone }}</div>
+        </div>
+        <div class="row m-2 p-3">
+            <div class="col-sm-3">Joining Date:</div>
+            <div class="col-sm-9">{{ user.profile.date_joined }}</div>
+        </div>
+    </div>
+{% endblock %}
+{% block script_block %}{% endblock %}
