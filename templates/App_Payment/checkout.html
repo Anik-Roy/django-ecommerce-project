@@ -8,7 +8,7 @@
             Shipping Address > <span class="text-muted">Checkout</span>
         </h2>
         <div class="row">
-            <div class ="col-md-9">
+            <div class ="col-md-7">
                 <div class="card mb-5" style="height: auto;">
                     <div class="card-body">
                         <form method="POST">
@@ -19,7 +19,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-5">
                 <div class="card" style="height: auto">
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
@@ -27,11 +27,28 @@
                                 <li class="list-group-item">{{ orderitem.item.name }} X {{ orderitem.quantity }}</li>
                             {% endfor %}
                         </ul>
+                        <div class="card-footer">
+                            <span class="float-start"><b>Order Total without discount</b></span>
+                            <span class="float-end">&#2547;<b>{{ order_total_without_discount|floatformat:2 }}</b></span>
+                        </div>
                     </div>
                     <div class="card-footer">
-                        <span class="float-start"><b>Order Total</b></span>
+                        <span class="float-start">Coupon code: {{ order.coupon.code }}</span>
+                        <span class="float-end">Discount: &#2547;<b>{{ order_discount_amount|floatformat:2 }}</b></span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="float-start"><b>Order Total applying discount</b></span>
                         <span class="float-end">&#2547;<b>{{ order_total|floatformat:2 }}</b></span>
                     </div>
+                    {% if not order.coupon %}
+                        <div class="coupon-div mt-2 p-2">
+                            <form action="{% url 'App_Payment:apply_coupon' %}" method="POST" class="card">
+                                {{ coupon_form|crispy }}
+                                {% csrf_token %}
+                                <input class="btn btn-primary btn-sm mt-2" type="submit" value="Apply coupon">
+                            </form>
+                        </div>
+                    {% endif %}
                 </div>
                 {% if saved_address.is_fully_filled %}
                     <a class="btn btn-warning btn-lg mt-3" href="{% url 'App_Payment:payment' %}">Make Payment</a>

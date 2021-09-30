@@ -1,4 +1,5 @@
 from django.db import models
+from App_Login.models import User
 
 # Create your models here.
 
@@ -15,6 +16,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='seller_product', null=True)
     mainimage = models.ImageField(upload_to='Products')
     name = models.CharField(max_length=264)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
@@ -22,6 +24,7 @@ class Product(models.Model):
     detail_text = models.TextField(max_length=1000, verbose_name='Description')
     price = models.FloatField()
     old_price = models.FloatField(default=0.00)
+    in_stock = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

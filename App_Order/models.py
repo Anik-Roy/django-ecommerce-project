@@ -31,10 +31,38 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     paymentId = models.CharField(max_length=264, blank=True, null=True)
     orderId = models.CharField(max_length=200, blank=True, null=True)
+    coupon = models.ForeignKey('Coupon', on_delete=models.SET_NULL, default=None, blank=True, null=True)
 
     def get_totals(self):
         total = 0
         for order_item in self.orderitems.all():
             total += float(order_item.get_total())
+        if self.coupon is not None:
+            return total - total * (self.coupon.discount/float('100'))
+        else:
+            return total
+
+    def get_totals_without_discount(self):
+        total = 0
+        for order_item in self.orderitems.all():
+            total += float(order_item.get_total())
         return total
+
+    def get_discount_amount(self):
+        total = 0
+        for order_item in self.orderitems.all():
+            total += float(order_item.get_total())
+        if self.coupon is not None:
+            return total * (self.coupon.discount / float('100'))
+        else:
+            return 0
+
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=50, verbose_name='Coupon Code')
+    discount = models.IntegerField(verbose_name='Coupon discount in percentage')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.code
 

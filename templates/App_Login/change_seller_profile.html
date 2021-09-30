@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title_block %} Signup | User {% endblock %}
+{% block style_block %}{% endblock %}
+{% block body_block %}
+    <div>
+        <h3>Change Seller Profile:</h3>
+    </div>
+    <div class="change-profile-div p-3">
+        <form method="POST">
+            {{ form|crispy }}
+            {{ seller_info_form|crispy }}
+            {% csrf_token %}
+            <input class="btn btn-success btn-sm mt-3" type="submit" value="Update Profile" />
+        </form>
+    </div>
+{% endblock %}
+{% block script_block %}{% endblock %}

@@ -46,6 +46,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=True,
         help_text=ugettext_lazy('Designates weather this user should be treated as active. Unselect this insist of deleting account.')
     )
+    is_seller = models.BooleanField(
+        ugettext_lazy('seller_status'),
+        default=False,
+        blank=True,
+        null=True,
+        help_text=ugettext_lazy('Designates weather this user should be treated as a seller. Unselect this insist of a normal account.')
+    )
     USERNAME_FIELD = 'email'
     objects = MyUserManager()
 
@@ -83,6 +90,33 @@ class Profile(models.Model):
         return True
 
 
+class SellerInfo(models.Model):
+    class ShopType(models.TextChoices):
+        electronics = 'electronics', 'Electronics'
+        accessories = 'accessories', 'Accessories'
+        cloths = 'cloths', 'Cloths'
+        groceries = 'groceries', 'Groceries'
+        others = 'others', 'Others'
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='seller_info')
+    shop_name = models.CharField(max_length=264, blank=True)
+    shop_address = models.TextField(max_length=350, blank=True)
+    shop_type = models.CharField(max_length=50, choices=ShopType.choices, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.user) + ' seller\'s profile'
+
+    def is_fully_filled(self):
+        fields_name = [f.name for f in self._meta.get_fields()]
+
+        for field_name in fields_name:
+            value = getattr(self, field_name)
+            if value is None or value == '':
+                return False
+        return True
+
+
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
@@ -92,3 +126,4 @@ def create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
+
